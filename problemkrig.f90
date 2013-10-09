@@ -104,7 +104,7 @@ program problemPC
 
   !Other IPOPT params
 
-  probtype=1
+  probtype=2
   kprob=0
 
   ! SD for area design variables
