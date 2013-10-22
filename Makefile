@@ -14,13 +14,13 @@ EXE = MixedOUU
 
 # CHANGEME: Here is the name of all object files corresponding to the source
 #           code that you wrote in order to define the problem statement
-OBJS =  problemkrig.o BFGSroutines.o optimize.o CalcstuffBFGS.o
+OBJS =  problemKriging.o functions.o BFGSroutines.o optimize.o CalcstuffBFGS.o
 
 # CHANGEME: Additional libraries
 ADDLIBS =
 
 # CHANGEME: Additional flags for compilation (e.g., include flags)
-ADDINCFLAGS = 
+ADDINCFLAGS =
 
 ##########################################################################
 #  Usually, you don't have to change anything below.  Note that if you   #
@@ -32,14 +32,14 @@ F77 = mpif77
 F90 = mpif90
 
 # Fotran Compiler options
-FFLAGS = -O3 -r8 -openmp 
+FFLAGS = -O3 -r8 -openmp
 
 # additional Fortran Compiler options for linking
 F77LINKFLAGS =  -Wl,--rpath -Wl,/home/komahan/Dropbox/Thesis/Program/Markus/Ipopt-3.10.0/lib
 
 
 # Linker flags
-LIBS = `PKG_CONFIG_PATH=/home/komahan/Dropbox/Thesis/Program/Markus/Ipopt-3.10.0/lib/pkgconfig:/home/komahan/Dropbox/Thesis/Program/Markus/Ipopt-3.10.0/share/pkgconfig: /usr/bin/pkg-config --libs ipopt` -lstdc++ -lm -L/usr/local/lib -lgsl -lgslcblas
+LIBS = `PKG_CONFIG_PATH=/home/komahan/Dropbox/Thesis/Program/Markus/Ipopt-3.10.0/lib/pkgconfig:/home/komahan/Dropbox/Thesis/Program/Markus/Ipopt-3.10.0/Ipopt/lib/pkgconfig: /usr/bin/pkg-config --libs ipopt` -lstdc++ -lm -L/usr/local/lib -lgsl -lgslcblas
 
 
 all: $(EXE)

@@ -480,7 +480,7 @@ c     ************
 
 c        Generate the current machine precision.
 
-         epsmch = dpmeps()
+         epsmch = 1.0d-16
 
 c        Initialize counters and scalars when task='START'.
 

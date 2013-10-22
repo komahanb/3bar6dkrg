@@ -1,4 +1,4 @@
-subroutine Krigingestimate(ndimin,ndimint,xavgin,xstdin,fctin,fctindxin,nptsin,statin,probtype,fmeanout,fvarout,fmeanprimeout,fvarprimeout)
+subroutine Krigingestimate(ndimin,ndimint,xavgin,xstdin,fctin,fctindxin,nptsin,statin,fmeanout,fvarout,fmeanprimeout,fvarprimeout)
 
   use dimKrig
   use timer_mod
@@ -6,7 +6,6 @@ subroutine Krigingestimate(ndimin,ndimint,xavgin,xstdin,fctin,fctindxin,nptsin,s
   include 'mpif.h'
 
   integer :: ierr,i,j,imax,nstattmp,ndimtmp,NCP,lenc,ndimin,NMCin,fctindxin,ndimint,Casemode,fctin,statin,nptsin
-  integer,intent(in)::probtype
 
   double precision :: diffconv,xavgin(ndimint),xstdin(ndimint),fmeanout,fvarout,fmeanprimeout(ndimint),fvarprimeout(ndimint)
   character*60 :: filename
@@ -27,14 +26,7 @@ subroutine Krigingestimate(ndimin,ndimint,xavgin,xstdin,fctin,fctindxin,nptsin,s
   ndimt=ndimint
 
   xavg(1:ndim)=xavgin(1:ndim)
-
-  if (probtype.eq.1) then
-    xstd(1:ndim)=xstdin(1:ndim)
-  else if (probtype.eq.2) then
-    xstd(1:ndim)=xavgin(1:ndim)*xstdin(1:ndim)
-  else
-    stop"Wrong problem type"
-  end if	     
+  xstd(1:ndim)=xavgin(1:ndim)*xstdin(1:ndim)
 
   fctindx=fctindxin
 
@@ -86,11 +78,10 @@ subroutine Krigingestimate(ndimin,ndimint,xavgin,xstdin,fctin,fctindxin,nptsin,s
         else 
            dynamics=0
         end if
-	dynamics =0
 
         ! ---------------------------------------------------------------------------
 
-        do fct=fctin,fctin           !0:exp 1: cos(lin sum) 2: Runge fct 3: Rosenbrock fct 4: Rastrigin 5: Lin (cos plus noise)  6: Trustdesign 7: Quadratic 8: Cubic 9: Short Column, 10:  Cantilever, 11: Three Bar ,20: CFD, 21,22: Optimization
+        do fct=fctin,fctin           !0:exp 1: cos(lin sum) 2: Runge fct 3: Rosenbrock fct 4: Rastrigin 5: Lin (cos plus noise)  6: Trustdesign 7: Quadratic 8: Cubic 9: Heaviside (Franke) >9: User supplied
 
            do nstattmp=statin,statin ! 0: f only  1: f+g  2: f+g+h  3: f+g+hv
 
@@ -120,7 +111,7 @@ subroutine Krigingestimate(ndimin,ndimint,xavgin,xstdin,fctin,fctindxin,nptsin,s
 
               counter=0
 
-              do nsamples=nptsin,nptsin !Makes this many nhs samples per cycle
+              do nsamples=5,5 !Makes this many nhs samples per cycle
 
                  counter=counter+1
 
@@ -131,7 +122,7 @@ subroutine Krigingestimate(ndimin,ndimint,xavgin,xstdin,fctin,fctindxin,nptsin,s
                  if (Casemode.eq.1) then
                     if (readMcsamples.eq.1) then
 
-                       if (fct.eq.20) then
+                       if (fct.eq.10) then
                           open(10,file='MC.inp',form='formatted',status='unknown')
                           read(10,*) !(xavg(i),i=1,ndim)
                           read(10,*) !(xstd(i),i=1,ndim)     
@@ -175,8 +166,8 @@ subroutine Krigingestimate(ndimin,ndimint,xavgin,xstdin,fctin,fctindxin,nptsin,s
                  ! Domain size in function space
                  do i=1,ndim
                     if (Casemode.eq.1) then
-                       DS(1,i)=xavg(i)-3.0*xstd(i)
-                       DS(2,i)=xavg(i)+3.0*xstd(i)
+                       DS(1,i)=xavg(i)-2.0*xstd(i)
+                       DS(2,i)=xavg(i)+2.0*xstd(i)
                     else
                        if (fct.eq.4) then
                           DS(1,i)=-5.12
@@ -474,7 +465,7 @@ subroutine Krigingestimate(ndimin,ndimint,xavgin,xstdin,fctin,fctindxin,nptsin,s
 
                           if (id_proc.eq.0) call Update
 
-                          if (fct.lt.20 .and. ndim.eq.2) then
+                          if (fct.lt.10 .and. ndim.eq.2) then
                              Cmode='Post_2D'
                              if (id_proc.eq.0) call TimerStart('Post process')
                              call Post_Process
