@@ -98,7 +98,7 @@ program problemPC
   !
 
   probtype(:)=1
-  kprob=2
+  kprob=4
 
   IDAT(1)=kprob
   IDAT(2)=0
@@ -287,7 +287,7 @@ subroutine EV_F(N, X, NEW_X, F, IDAT, DAT, IERR)
   end do
   !---- MEAN and VARIANCE OF worst OBJECTIVE FUNCTION
 
-  call Krigingestimate(N-3,N,x,sigmax,23,0,DAT(1001:1020),50,50,50,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
+  call Krigingestimate(N,N,x,sigmax,12,0,DAT(1001:1020),50,50,50,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
 
   if (IDAT(2).eq.1) then ! Deterministic with PC
      fvartmp=0.0d0
@@ -361,7 +361,7 @@ subroutine EV_G(N, X, NEW_X, M, G, IDAT, DAT, IERR)
      !call Krigingestimate(ndimin,ndimint,xavgin,xstdin,fctin,fctindxin,DATIN,nptsin,statin,probtypeIN,fmeanout,fvarout,fmeanprimeout,fvarprimeout)
 !print*,sigmax
 !     if(id_proc.eq.0)    print*,"enter",i
-     call Krigingestimate(N-3,N,x,sigmax,23,i,DAT(1001:1020),50,50,50,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
+     call Krigingestimate(N,N,x,sigmax,12,i,DAT(1001:1020),50,50,50,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
  !    if(id_proc.eq.0)    print*,"leave"
      ! if (fvartmp.lt.0.0) fvartmp=0.0
 
@@ -370,7 +370,7 @@ subroutine EV_G(N, X, NEW_X, M, G, IDAT, DAT, IERR)
         fvarprimetmp(:)=0.0
      end if
 
-     if(id_proc.eq.0)   print*,"me,st:",fmeantmp,fvartmp
+!     if(id_proc.eq.0)   print*,"me,st:",fmeantmp,fvartmp
 
      cmean(i)=fmeantmp
      cstd(i)=sqrt(fvartmp)
@@ -480,7 +480,7 @@ subroutine EV_GRAD_F(N, X, NEW_X, GRAD, IDAT, DAT, IERR)
 
      !---- MEAN and VARIANCE OF worst OBJECTIVE FUNCTION
 
-     call Krigingestimate(N-3,N,x,sigmax,23,0,DAT(1001:1020),50,50,50,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
+     call Krigingestimate(N,N,x,sigmax,12,0,DAT(1001:1020),50,50,50,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
 
 
      if (IDAT(2).eq.1) then
@@ -692,7 +692,7 @@ subroutine EV_JAC_G(TASK, N, X, NEW_X, M, NZ, ACON, AVAR, A,IDAT, DAT, IERR)
 
            !---- MEAN OF INEQUALITY CONSTRAINT i
 
-           call Krigingestimate(N-3,N,x,sigmax,23,i,DAT(1001:1020),50,50,50,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
+           call Krigingestimate(N,N,x,sigmax,12,i,DAT(1001:1020),50,50,50,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
 
            if (fvartmp.lt.0.0) fvartmp=0.0
 
@@ -924,7 +924,7 @@ subroutine ITER_CB(ALG_MODE, ITER_COUNT,OBJVAL, INF_PR, INF_DU,MU, DNORM, REGU_S
   !     And set ISTOP to 1 if you want Ipopt to stop now.  Below is just a
   !     simple example.
   !
-  if (ITER_COUNT .gt. 1 .and. DNORM.le.1D-03 .and. inf_pr.le.1.0D-02) ISTOP = 1
+  if (ITER_COUNT .gt. 1 .and. DNORM.le.1D-02 .and. inf_pr.le.1.0D-03) ISTOP = 1
 
   
   return
@@ -953,7 +953,7 @@ end subroutine ITER_CB
 
 
          call optimize(ndimt-DIM,xtmp,ndimt,ftmp,dftmp,low,up,gtol,.false.,.false.,fctindx)
-         print*,dftmp
+!         print*,dftmp
 
       return
     end subroutine epigrads
