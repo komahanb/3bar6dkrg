@@ -3,7 +3,7 @@
         implicit none
 
         integer   ::   mmax,ndvar,ndvart,Nouter,maxfev,fct
-        parameter      (mmax=80)  !mmax is the maximum number of limited memory corrections.
+        parameter      (mmax=100)  !mmax is the maximum number of limited memory corrections.
 
         double precision :: D(ndvart),fobj,dfdD(ndvart),dfdDtmp(ndvar),dfdDD(ndvart,ndvart),v(ndvart),gtol,low(ndvar),up(ndvar)
  
@@ -34,7 +34,7 @@
 !     We suppress both code-supplied stopping tests because the
 !        user is providing his own stopping criteria.
 
-        factr=0.0d0
+        factr=1.d+12
         pgtol=0.0d0
 
 !     We specify the number m of limited memory corrections stored.  
@@ -60,15 +60,15 @@
 !        function f and gradient dfdDtmp values at the current D.
 
 
-           if(fct.ge.1 .and. fct.le.4) then
+!           if(fct.ge.1 .and. fct.le.4) then
          
               call CalcstuffBFGS(D,ndvart,fobj,dfdD,fct)
+!              print*,fobj,dfdd
+ !          else
 
-           else
-
-              call Eulersolve(D,ndvart,0,fobj,dfdD,dfdDD,1,v,fct-10)
+  !            call Eulersolve(D,ndvart,0,fobj,dfdD,dfdDD,1,v,fct-10)
               
-           end if
+   !        end if
 
            dfdDtmp(1:ndvar)=dfdD(1:ndvar)
 

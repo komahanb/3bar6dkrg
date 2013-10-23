@@ -84,8 +84,6 @@ subroutine evalfunc(x,DIM,fct,ifid,flag,f,df,d2f,v)
         stop
      end if
 
-     !     print*,'before optimize',fctindx,fct,xtmp,ndimt,low(1:ndimt-dim),up(1:ndimt-dim)
-
      call omp_set_num_threads(omp_get_max_threads())
 
      if (fctindx.eq.0) then !what is the max possible drag? (objective function)
@@ -98,30 +96,40 @@ subroutine evalfunc(x,DIM,fct,ifid,flag,f,df,d2f,v)
 
      end if
 
-  else !if (fct.eq.23) then ! Beam
+  else 
 
      gtol=1e-6
 
-     low(1:ndimt-DIM)=xtmp(1:ndimt-DIM)-xstdt(1:ndimt-DIM)
-     up(1:ndimt-DIM)=xtmp(1:ndimt-DIM)+xstdt(1:ndimt-DIM)
+     low(1:ndimt-DIM) = xtmp(1:ndimt-DIM) - xstdt(1:ndimt-DIM)
+     up(1:ndimt-DIM)  = xtmp(1:ndimt-DIM) + xstdt(1:ndimt-DIM)
+     
+     up(:)=low(:)
 
-     !    if (fctindx.eq.0) then ! what is the worst objective function 
- !    print*,"optimizing"
+
+!!$
+!!$     fctindx=1
+!!$
+!!$     xtmp(1)=4.50141902043655
+!!$     xtmp(2)=0.844040304093889     
+!!$     xtmp(3)=0.257559096274099
+!!$     xtmp(4)=0.726034217902551
+!!$     xtmp(5)=1.10401463069740     
+!!$     xtmp(6)=2.23762102184387     
+!!$ 
+!!$
+   ! print*,''
+   !print*,fctindx,xtmp
+     
      call optimize(ndimt-DIM,xtmp,ndimt,f,dftmp,low,up,gtol,.true.,.false.,fctindx)
-!print*,xtmp
 
-     !        call optimize(ndimt-DIM,xtmp,ndimt,f,dftmp,low,up,gtol,.true.,.false.,fctindx)
-
-     !   end if
-
-!!$
-!!$  else
-!!$
-!!$     write(*,*) 'Wrong fctindx in function call'
-!!$     stop
+    ! print*,xtmp
+    ! print*,f
+    ! print*,''
+!     stop
+     !  print*,f,dftmp
 
   end if
-
+  
 
 
   df(1:DIM)=dftmp(ndimt-DIM+1:ndimt)

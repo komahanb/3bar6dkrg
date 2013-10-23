@@ -78,27 +78,35 @@ program problemPC
   ! orientation design variables
 
   ! phi(1)
-  X(4)   = 45.0*pi/180.0
-  X_L(4) = 30.0*pi/180.0
-  X_U(4) = 60.0*pi/180.0
+  X(4)   = 30.0*pi/180.0
+  X_L(4) = 15.0*pi/180.0
+  X_U(4) = 45.0*pi/180.0
 
   !phi(2)
   X(5)   = 90.0*pi/180.0
-  X_L(5) = 60.0*pi/180.0
-  X_U(5) = 120.0*pi/180.0
+  X_L(5) = 75.0*pi/180.0
+  X_U(5) = 115.0*pi/180.0
 
   !phi(3)
-  X(6)   = (90.0+45.0)*pi/180.0
-  X_L(6) = (90.0+30.0)*pi/180.0
-  X_U(6) = (90.0+60.0)*pi/180.0
-
+  X(6)   = (90.0+30.0)*pi/180.0
+  X_L(6) = (90.0+15.0)*pi/180.0
+  X_U(6) = (90.0+45.0)*pi/180.0
+  
+!!$  
+!!$  
+!!$  X(1)=4.50141902043655
+!!$  X(2)=0.844040304093889     
+!!$  X(3)=0.257559096274099
+!!$  X(4)=0.726034217902551
+!!$  X(5)=1.10401463069740     
+!!$  X(6)=2.23762102184387  
 
   !
   !(2)     Integer Settings and store into IDAT (check for size above)
   !
 
   probtype(:)=1
-  kprob=4
+  kprob=2
 
   IDAT(1)=kprob
   IDAT(2)=0
@@ -114,9 +122,9 @@ program problemPC
 
   ! SD for orientation phi
 
-  sigmax(4)=1.5*pi/180.0
-  sigmax(5)=1.5*pi/180.0
-  sigmax(6)=1.5*pi/180.0
+  sigmax(4)=1.0*pi/180.0
+  sigmax(5)=1.0*pi/180.0
+  sigmax(6)=1.0*pi/180.0
 
   do i=1,n
      dat(i)=sigmax(i)
@@ -287,7 +295,7 @@ subroutine EV_F(N, X, NEW_X, F, IDAT, DAT, IERR)
   end do
   !---- MEAN and VARIANCE OF worst OBJECTIVE FUNCTION
 
-  call Krigingestimate(N,N,x,sigmax,12,0,DAT(1001:1020),50,50,50,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
+  call Krigingestimate(N-3,N,x,sigmax,23,0,DAT(1001:1020),20,20,20,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
 
   if (IDAT(2).eq.1) then ! Deterministic with PC
      fvartmp=0.0d0
@@ -361,7 +369,9 @@ subroutine EV_G(N, X, NEW_X, M, G, IDAT, DAT, IERR)
      !call Krigingestimate(ndimin,ndimint,xavgin,xstdin,fctin,fctindxin,DATIN,nptsin,statin,probtypeIN,fmeanout,fvarout,fmeanprimeout,fvarprimeout)
 !print*,sigmax
 !     if(id_proc.eq.0)    print*,"enter",i
-     call Krigingestimate(N,N,x,sigmax,12,i,DAT(1001:1020),50,50,50,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
+
+     call Krigingestimate(N-3,N,x,sigmax,23,i,DAT(1001:1020),20,20,20,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
+
  !    if(id_proc.eq.0)    print*,"leave"
      ! if (fvartmp.lt.0.0) fvartmp=0.0
 
@@ -374,7 +384,7 @@ subroutine EV_G(N, X, NEW_X, M, G, IDAT, DAT, IERR)
 
      cmean(i)=fmeantmp
      cstd(i)=sqrt(fvartmp)
-
+     
      !         if(id_proc.eq.0)   print*,"me,st:",cmean(i),cstd(i)
      !        if(id_proc.eq.0)   print*,"mp,vp:",fmeanprimetmp(N-1:N),fvarprimetmp(N-1:N)
 
@@ -382,10 +392,9 @@ subroutine EV_G(N, X, NEW_X, M, G, IDAT, DAT, IERR)
         dc(i,j)=fmeanprimetmp(j)
         if (fvartmp.ne.0.0) then
            dc(i,j)=dc(i,j)+kprob*fvarprimetmp(j)/(2.0*sqrt(fvartmp))
-        endif
+        end if
      end do
-
-  end do ! m LOOP
+  end do ! M Loop
 
   !---- COMBINED INEQUALITY CONSTRAINTS
 
@@ -480,7 +489,7 @@ subroutine EV_GRAD_F(N, X, NEW_X, GRAD, IDAT, DAT, IERR)
 
      !---- MEAN and VARIANCE OF worst OBJECTIVE FUNCTION
 
-     call Krigingestimate(N,N,x,sigmax,12,0,DAT(1001:1020),50,50,50,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
+     call Krigingestimate(N-3,N,x,sigmax,23,0,DAT(1001:1020),50,50,50,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
 
 
      if (IDAT(2).eq.1) then
@@ -692,7 +701,7 @@ subroutine EV_JAC_G(TASK, N, X, NEW_X, M, NZ, ACON, AVAR, A,IDAT, DAT, IERR)
 
            !---- MEAN OF INEQUALITY CONSTRAINT i
 
-           call Krigingestimate(N,N,x,sigmax,12,i,DAT(1001:1020),50,50,50,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
+           call Krigingestimate(N-3,N,x,sigmax,23,i,DAT(1001:1020),50,50,50,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
 
            if (fvartmp.lt.0.0) fvartmp=0.0
 
@@ -945,16 +954,16 @@ end subroutine ITER_CB
       real*8 :: gtol,low(ndimt-DIM),up(ndimt-DIM)
 
 
-      gtol=1e-3
+      gtol=1e-6
       low(1:ndimt-DIM)=xtmp(1:ndimt-DIM)
       !-xstdt(1:ndimt-DIM)
       up(1:ndimt-DIM)=xtmp(1:ndimt-DIM)
       !+xstdt(1:ndimt-DIM)
 
-
+!      print*,"overhere"
          call optimize(ndimt-DIM,xtmp,ndimt,ftmp,dftmp,low,up,gtol,.false.,.false.,fctindx)
 !         print*,dftmp
-
+ !     print*,"overhere"
       return
     end subroutine epigrads
  
