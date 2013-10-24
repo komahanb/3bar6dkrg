@@ -103,7 +103,7 @@ subroutine evalfunc(x,DIM,fct,ifid,flag,f,df,d2f,v)
      low(1:ndimt-DIM) = xtmp(1:ndimt-DIM) - xstdt(1:ndimt-DIM)
      up(1:ndimt-DIM)  = xtmp(1:ndimt-DIM) + xstdt(1:ndimt-DIM)
      
-     up(:)=low(:)
+  !   up(:)=low(:)
 
 
 !!$

@@ -84,13 +84,13 @@ program problemPC
 
   !phi(2)
   X(5)   = 90.0*pi/180.0
-  X_L(5) = 80.0*pi/180.0
-  X_U(5) = 100.0*pi/180.0
+  X_L(5) = 60.0*pi/180.0
+  X_U(5) = 120.0*pi/180.0
 
   !phi(3)
-  X(6)   = (90.0+30.0)*pi/180.0
-  X_L(6) = (90.0+15.0)*pi/180.0
-  X_U(6) = (90.0+45.0)*pi/180.0
+  X(6)   = (90.0+45.0)*pi/180.0
+  X_L(6) = (90.0+30.0)*pi/180.0
+  X_U(6) = (90.0+60.0)*pi/180.0
   
 !!$  
 !!$  
@@ -106,7 +106,7 @@ program problemPC
   !
 
   probtype(:)=1
-  kprob=4
+  kprob=2
 
   IDAT(1)=kprob
   IDAT(2)=0
@@ -116,9 +116,9 @@ program problemPC
   !(3)     Setup std dev and store in to dat(1:N)
   !
   ! SD for area design variables
-  sigmax(1)=0.1
-  sigmax(2)=0.1
-  sigmax(3)=0.1
+  sigmax(1)=0.05
+  sigmax(2)=0.05
+  sigmax(3)=0.05
 
   ! SD for orientation phi
 
@@ -295,7 +295,7 @@ subroutine EV_F(N, X, NEW_X, F, IDAT, DAT, IERR)
   end do
   !---- MEAN and VARIANCE OF worst OBJECTIVE FUNCTION
 
-  call Krigingestimate(N-3,N,x,sigmax,23,0,DAT(1001:1020),20,20,20,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
+  call Krigingestimate(N,N,x,sigmax,12,0,DAT(1001:1020),75,75,75,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
 
   if (IDAT(2).eq.1) then ! Deterministic with PC
      fvartmp=0.0d0
@@ -317,10 +317,10 @@ subroutine EV_F(N, X, NEW_X, F, IDAT, DAT, IERR)
   if (id_proc.eq.0) then
      print*,''
      write(*,'(4x,a,3F13.4)') '>>Objective:',fmeantmp,fvartmp,fmeantmp+fvartmp
-     print*,''
+ !    print*,'fmeanprime,fvarprime:',fmeanprimetmp(1:N),fvarprimetmp(1:N)
   end if
 
-  
+!  stop
   do i=1,n
      DAT(2*N+2+i)=Xsave(i)
      X(i)=Xsave(i)
@@ -370,7 +370,7 @@ subroutine EV_G(N, X, NEW_X, M, G, IDAT, DAT, IERR)
 !print*,sigmax
 !     if(id_proc.eq.0)    print*,"enter",i
 
-     call Krigingestimate(N-3,N,x,sigmax,23,i,DAT(1001:1020),20,20,20,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
+     call Krigingestimate(N,N,x,sigmax,12,i,DAT(1001:1020),75,75,75,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
 
  !    if(id_proc.eq.0)    print*,"leave"
      ! if (fvartmp.lt.0.0) fvartmp=0.0
@@ -385,8 +385,9 @@ subroutine EV_G(N, X, NEW_X, M, G, IDAT, DAT, IERR)
      cmean(i)=fmeantmp
      cstd(i)=sqrt(fvartmp)
      
-     !         if(id_proc.eq.0)   print*,"me,st:",cmean(i),cstd(i)
-     !        if(id_proc.eq.0)   print*,"mp,vp:",fmeanprimetmp(N-1:N),fvarprimetmp(N-1:N)
+!     if(id_proc.eq.0)   print*,"me,st:",cmean(i),cstd(i)
+!     if(id_proc.eq.0)   print*,"mp,vp:",fmeanprimetmp(1:N),fvarprimetmp(1:N)
+
 
      do j=1,N
         dc(i,j)=fmeanprimetmp(j)
@@ -489,7 +490,7 @@ subroutine EV_GRAD_F(N, X, NEW_X, GRAD, IDAT, DAT, IERR)
 
      !---- MEAN and VARIANCE OF worst OBJECTIVE FUNCTION
 
-     call Krigingestimate(N-3,N,x,sigmax,23,0,DAT(1001:1020),50,50,50,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
+     call Krigingestimate(N,N,x,sigmax,12,0,DAT(1001:1020),75,75,75,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
 
 
      if (IDAT(2).eq.1) then
@@ -701,7 +702,7 @@ subroutine EV_JAC_G(TASK, N, X, NEW_X, M, NZ, ACON, AVAR, A,IDAT, DAT, IERR)
 
            !---- MEAN OF INEQUALITY CONSTRAINT i
 
-           call Krigingestimate(N-3,N,x,sigmax,23,i,DAT(1001:1020),50,50,50,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
+           call Krigingestimate(N,N,x,sigmax,12,i,DAT(1001:1020),75,75,75,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
 
            if (fvartmp.lt.0.0) fvartmp=0.0
 
