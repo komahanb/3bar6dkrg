@@ -78,14 +78,14 @@ program problemPC
   ! orientation design variables
 
   ! phi(1)
-  X(4)   = 30.0*pi/180.0
-  X_L(4) = 15.0*pi/180.0
-  X_U(4) = 45.0*pi/180.0
+  X(4)   = 45.0*pi/180.0
+  X_L(4) = 30.0*pi/180.0
+  X_U(4) = 60.0*pi/180.0
 
   !phi(2)
   X(5)   = 90.0*pi/180.0
-  X_L(5) = 75.0*pi/180.0
-  X_U(5) = 115.0*pi/180.0
+  X_L(5) = 80.0*pi/180.0
+  X_U(5) = 100.0*pi/180.0
 
   !phi(3)
   X(6)   = (90.0+30.0)*pi/180.0
@@ -106,7 +106,7 @@ program problemPC
   !
 
   probtype(:)=1
-  kprob=2
+  kprob=4
 
   IDAT(1)=kprob
   IDAT(2)=0
