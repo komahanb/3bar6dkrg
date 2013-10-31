@@ -57,8 +57,8 @@ program problemKriging
   !     down in this file.
   !
   external EV_F, EV_G, EV_GRAD_F, EV_JAC_G, EV_HESS, ITER_CB
-  
-  
+
+
   call MPI_START
 
   !**********************************************************************
@@ -101,7 +101,7 @@ program problemKriging
   !===================================================================
 
   probtype(:)=1
-  kprob=0
+  kprob=2
 
   IDAT(1)=kprob
   IDAT(2)=0
@@ -117,9 +117,9 @@ program problemKriging
 
   ! SD for orientation phi
 
-  sigmax(4)=0.1*pi/180.0
-  sigmax(5)=0.1*pi/180.0
-  sigmax(6)=0.1*pi/180.0
+  sigmax(4)=1.0*pi/180.0
+  sigmax(5)=1.0*pi/180.0
+  sigmax(6)=1.0*pi/180.0
 
   do i=1,n
      dat(i)=sigmax(i)
@@ -404,7 +404,7 @@ subroutine EV_G(N, X, NEW_X, M, G, IDAT, DAT, IERR)
      print*,''
      write(*,'(4x,a)') '>>Normalized Constraint Values:'
      do i=1,8
-        write(*,'(E13.2)'),g(i)
+        write(*,'(3E13.2)'),cmean(i),cstd(i),g(i)
      end do
      print*,''
   end if
@@ -952,11 +952,28 @@ subroutine epigrads(fct,fctindx,dim,ndimt,xtmp,xstdt,ftmp,dftmp)
 
 
   gtol=1e-6
-  low(1:ndimt-DIM)=xtmp(1:ndimt-DIM)
-  up(1:ndimt-DIM)=xtmp(1:ndimt-DIM)
+  
+  low(1:ndimt-DIM)= xtmp(1:ndimt-DIM)  + xstdt(1:ndimt-DIM)
+  up(1:ndimt-DIM) = xtmp(1:ndimt-DIM)  + xstdt(1:ndimt-DIM)
 
-!  call optimize(ndimt-DIM,xtmp,ndimt,ftmp,dftmp,low,up,gtol,.true.,.false.,fctindx)
-  call CalcstuffBFGS(xtmp,ndimt,ftmp,dftmp,fctindx)
+!  print*,''
+!  print*,'xin :',xtmp
+  
+ ! if (fctindx.eq.0) then
+
+ !    call optimize(ndimt-DIM,xtmp,ndimt,ftmp,dftmp,low,up,gtol,.false.,.false.,fctindx)
+
+!  else 
+
+     call optimize(ndimt-DIM,xtmp,ndimt,ftmp,dftmp,low,up,gtol,.true.,.false.,fctindx)
+
+
+  !end if
+
+ ! print*,'x*  :',xtmp
+ ! print*,''
+  
+  !call CalcstuffBFGS(xtmp,ndimt,ftmp,dftmp,fctindx)
 
   return
 end subroutine epigrads
