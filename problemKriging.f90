@@ -101,7 +101,7 @@ program problemKriging
   !===================================================================
 
   probtype(:)=1
-  kprob=2
+  kprob=4
 
   IDAT(1)=kprob
   IDAT(2)=0
@@ -914,9 +914,11 @@ subroutine ITER_CB(ALG_MODE, ITER_COUNT,OBJVAL, INF_PR, INF_DU,MU, DNORM, REGU_S
   double precision DAT(*)
   integer IDAT(*)
   integer ISTOP
+
   !
   !     You can put some output here
   !
+
   if (id_proc.eq.0) then
 
      if (ITER_COUNT .eq.0) then
@@ -928,10 +930,12 @@ subroutine ITER_CB(ALG_MODE, ITER_COUNT,OBJVAL, INF_PR, INF_DU,MU, DNORM, REGU_S
      write(76,'(i5,5e15.7)') ITER_COUNT,OBJVAL,DNORM,INF_PR,INF_DU,MU
 
   end if
+
   !
   !     And set ISTOP to 1 if you want Ipopt to stop now.  Below is just a
   !     simple example.
   !
+
   if (ITER_COUNT .gt. 1 .and. DNORM.le.1D-03 .and. inf_pr.le.1.0D-03) ISTOP = 1
 
   
@@ -947,34 +951,16 @@ subroutine epigrads(fct,fctindx,dim,ndimt,xtmp,xstdt,ftmp,dftmp)
   real*8,intent(in)  :: xtmp(ndimt),xstdt(ndimt)
   real*8,intent(out) :: dftmp(ndimt)
   real*8::ftmp
-
   real*8 :: gtol,low(ndimt-DIM),up(ndimt-DIM)
 
 
   gtol=1e-6
-  
+
   low(1:ndimt-DIM)= xtmp(1:ndimt-DIM)  + xstdt(1:ndimt-DIM)
   up(1:ndimt-DIM) = xtmp(1:ndimt-DIM)  + xstdt(1:ndimt-DIM)
 
-!  print*,''
-!  print*,'xin :',xtmp
-  
- ! if (fctindx.eq.0) then
-
- !    call optimize(ndimt-DIM,xtmp,ndimt,ftmp,dftmp,low,up,gtol,.false.,.false.,fctindx)
-
-!  else 
-
-     call optimize(ndimt-DIM,xtmp,ndimt,ftmp,dftmp,low,up,gtol,.true.,.false.,fctindx)
-
-
-  !end if
-
- ! print*,'x*  :',xtmp
- ! print*,''
-  
-  !call CalcstuffBFGS(xtmp,ndimt,ftmp,dftmp,fctindx)
+  call optimize(ndimt-DIM,xtmp,ndimt,ftmp,dftmp,low,up,gtol,.true.,.false.,fctindx)
 
   return
 end subroutine epigrads
- 
+
