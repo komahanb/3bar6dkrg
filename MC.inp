@@ -2,7 +2,7 @@
 0.00174532925 0.01  ! Standard Deviation
 0                   ! Target Design Variable was 4
 1		    ! Target Function
-100000		    ! # of MonteCarlo Simulation
+50000		    ! # of MonteCarlo Simulation
 30                  ! # of Decomposition, Bounds for Histogram
 0		    !read MC Samples
 1		    !Evaluate exact function during MC or not (0 or 1)

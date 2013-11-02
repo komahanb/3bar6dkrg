@@ -1,2 +1,2 @@
 make
-mpiexec -np 8 ./MixedOUU  |tee screen
+mpiexec -np 4 ./MixedOUU  |tee screen

@@ -73,9 +73,9 @@ program problemKriging
   ! Area design variables
 
   do i=1,N-3
-     X(i)   = 1.0  
-     X_L(i) = 0.0 
-     X_U(i) = infbound 
+     X(i)   = 2.0  
+     X_L(i) = 1.0 
+     X_U(i) = 5.0
   end do
 
   ! orientation design variables
@@ -101,7 +101,7 @@ program problemKriging
   !===================================================================
 
   probtype(:)=1
-  kprob=4
+  kprob=0
 
   IDAT(1)=kprob
   IDAT(2)=0
@@ -144,18 +144,18 @@ program problemKriging
   dat(1000+1)=10.0 !height ref
   dat(1000+2)=1.0e7 !E
   dat(1000+3)=0.1 !gamma
-  dat(1000+4)=45.0*pi/180.0
-  dat(1000+5)=20000.0
+  dat(1000+4)=50.0*pi/180.0
+  dat(1000+5)=30000.0
 
   ! Max constraint values
 
   !Tensile
   dat(1000+6)=5000.0    ! psi tensile_sigma1_max=dat(6)      
-  dat(1000+7)=20000.0    ! psi tensile_sigma2_max=dat(7)
+  dat(1000+7)=10000.0    ! psi tensile_sigma2_max=dat(7)
   dat(1000+8)=5000.0    ! psi tensile_sigma3_max=dat(8)
   !Compressive
   dat(1000+9)=5000.0    ! psi comp_sigma1_max=dat(9)
-  dat(1000+10)=20000.0   ! psi comp_sigma2_max=dat(10)
+  dat(1000+10)=10000.0   ! psi comp_sigma2_max=dat(10)
   dat(1000+11)=5000.0   ! psi comp_sigma3_max=dat(11)
   !Displacement
   dat(1000+12)=0.005    ! in  max_u_disp=dat(12)
@@ -243,8 +243,7 @@ program problemKriging
         write(*,*) 'LAM(',i,') = ',LAM(i)
      enddo
      write(*,*)
-     write(*,*) 'Weight and its variance:',DAT(N+1),DAT(N+2)
-
+     write(*,'(a,3F13.4)') 'Weight, variance, SD, CV:',DAT(N+1),DAT(N+2),sqrt(DAT(N+2)),sqrt(DAT(N+2))/DAT(N+1)
   end if
   !
 9000 continue
@@ -314,6 +313,8 @@ subroutine EV_F(N, X, NEW_X, F, IDAT, DAT, IERR)
   if (id_proc.eq.0) then
      print*,''
      write(*,'(4x,a,3F13.4)') '>>Objective:',fmeantmp,fvartmp,fmeantmp+fvartmp
+     write(*,'(4x,a,F13.4)') '>>Coeff of variance :',sqrt(fvartmp)/fmeantmp
+
  !    print*,'fmeanprime,fvarprime:',fmeanprimetmp(1:N),fvarprimetmp(1:N)
   end if
 
@@ -936,7 +937,7 @@ subroutine ITER_CB(ALG_MODE, ITER_COUNT,OBJVAL, INF_PR, INF_DU,MU, DNORM, REGU_S
   !     simple example.
   !
 
-  if (ITER_COUNT .gt. 1 .and. DNORM.le.1D-03 .and. inf_pr.le.1.0D-03) ISTOP = 1
+  if (ITER_COUNT .gt. 1 .and. DNORM.le.1D-04 .and. inf_pr.le.1.0D-04) ISTOP = 1
 
   
   return

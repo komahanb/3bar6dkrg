@@ -11,7 +11,7 @@ sb yes
 max_iter 500
 
 # Set tolerance
-tol 1.d-3
+tol 1.d-4
 
 # Maximum number of CPU seconds
 max_cpu_time 1.d10
