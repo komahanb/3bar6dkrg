@@ -101,7 +101,7 @@ program problemKriging
   !===================================================================
 
   probtype(:)=1
-  kprob=0
+  kprob=1
 
   IDAT(1)=kprob
   IDAT(2)=0
@@ -291,7 +291,7 @@ subroutine EV_F(N, X, NEW_X, F, IDAT, DAT, IERR)
 
   !---- MEAN and VARIANCE OF worst OBJECTIVE FUNCTION
 
-  call Krigingestimate(N-3,N,x,sigmax,23,0,DAT(1001:1020),20,20,20,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
+  call Krigingestimate(N-3,N,x,sigmax,23,0,DAT(1001:1020),10,10,70,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
 
   if (IDAT(2).eq.1) then ! Deterministic with PC
      fvartmp=0.0d0
