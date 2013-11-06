@@ -74,8 +74,8 @@ program problemKriging
 
   do i=1,N-3
      X(i)   = 2.0  
-     X_L(i) = 1.0 
-     X_U(i) = 5.0
+     X_L(i) = 0.25d0
+     X_U(i) = 5.0d0
   end do
 
   ! orientation design variables
@@ -101,7 +101,7 @@ program problemKriging
   !===================================================================
 
   probtype(:)=1
-  kprob=1
+  kprob=4
 
   IDAT(1)=kprob
   IDAT(2)=0
@@ -243,7 +243,7 @@ program problemKriging
         write(*,*) 'LAM(',i,') = ',LAM(i)
      enddo
      write(*,*)
-     write(*,'(a,3F13.4)') 'Weight, variance, SD, CV:',DAT(N+1),DAT(N+2),sqrt(DAT(N+2)),sqrt(DAT(N+2))/DAT(N+1)
+     write(*,'(a,4F13.4)') 'Weight, variance, SD, CV:',DAT(N+1),DAT(N+2),sqrt(DAT(N+2)),sqrt(DAT(N+2))/DAT(N+1)
   end if
   !
 9000 continue
@@ -291,7 +291,7 @@ subroutine EV_F(N, X, NEW_X, F, IDAT, DAT, IERR)
 
   !---- MEAN and VARIANCE OF worst OBJECTIVE FUNCTION
 
-  call Krigingestimate(N-3,N,x,sigmax,23,0,DAT(1001:1020),10,10,70,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
+  call Krigingestimate(N-3,N,x,sigmax,23,0,DAT(1001:1020),70,70,70,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
 
   if (IDAT(2).eq.1) then ! Deterministic with PC
      fvartmp=0.0d0
@@ -368,7 +368,7 @@ subroutine EV_G(N, X, NEW_X, M, G, IDAT, DAT, IERR)
 !print*,sigmax
 !     if(id_proc.eq.0)    print*,"enter",i
 
-     call Krigingestimate(N-3,N,x,sigmax,23,i,DAT(1001:1020),20,20,20,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
+     call Krigingestimate(N-3,N,x,sigmax,23,i,DAT(1001:1020),70,70,70,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
 
  !    if(id_proc.eq.0)    print*,"leave"
      ! if (fvartmp.lt.0.0) fvartmp=0.0
@@ -488,7 +488,7 @@ subroutine EV_GRAD_F(N, X, NEW_X, GRAD, IDAT, DAT, IERR)
 
      !---- MEAN and VARIANCE OF worst OBJECTIVE FUNCTION
 
-     call Krigingestimate(N-3,N,x,sigmax,23,0,DAT(1001:1020),20,20,20,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
+     call Krigingestimate(N-3,N,x,sigmax,23,0,DAT(1001:1020),70,70,70,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
 
 
      if (IDAT(2).eq.1) then
@@ -700,7 +700,7 @@ subroutine EV_JAC_G(TASK, N, X, NEW_X, M, NZ, ACON, AVAR, A,IDAT, DAT, IERR)
 
            !---- MEAN OF INEQUALITY CONSTRAINT i
 
-           call Krigingestimate(N-3,N,x,sigmax,23,i,DAT(1001:1020),20,20,20,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
+           call Krigingestimate(N-3,N,x,sigmax,23,i,DAT(1001:1020),70,70,70,0,probtype,myflag,fmeantmp,fvartmp,fmeanprimetmp,fvarprimetmp)
 
            if (fvartmp.lt.0.0) fvartmp=0.0
 
@@ -937,7 +937,7 @@ subroutine ITER_CB(ALG_MODE, ITER_COUNT,OBJVAL, INF_PR, INF_DU,MU, DNORM, REGU_S
   !     simple example.
   !
 
-  if (ITER_COUNT .gt. 1 .and. DNORM.le.1D-04 .and. inf_pr.le.1.0D-04) ISTOP = 1
+  if (ITER_COUNT .gt. 1 .and. DNORM.le.1D-03 .and. inf_pr.le.1.0D-03) ISTOP = 1
 
   
   return
