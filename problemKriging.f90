@@ -101,10 +101,10 @@ program problemKriging
   !===================================================================
 
   probtype(:)=1
-  kprob=0
+  kprob=2
 
   IDAT(1)=kprob
-  IDAT(2)=1
+  IDAT(2)=0
   IDAT(3:N+2)=probtype(1:N)
 
   !===============================================
@@ -178,8 +178,9 @@ program problemKriging
   !
   !     Open an output file
   !
-
   if (id_proc.eq.0) open(unit=76,file='Opt.his',form='formatted',status='replace')
+
+  if (id_proc.eq.0) open(unit=86,file='beta.his',form='formatted',status='replace')
 
   IERR = IPOPENOUTPUTFILE(IPROBLEM, 'IPOPT.OUT', 5)
   if (IERR.ne.0 ) then
@@ -252,6 +253,7 @@ program problemKriging
   !
   call IPFREE(IPROBLEM)
   if (id_proc.eq.0) close(76)
+  if (id_proc.eq.0) close(86)
   call stop_all
   !
 9990 continue
@@ -405,7 +407,8 @@ subroutine EV_G(N, X, NEW_X, M, G, IDAT, DAT, IERR)
      print*,''
      write(*,'(4x,a)') '>>Normalized Constraint Values:'
      do i=1,8
-        write(*,'(3E13.2)'),cmean(i),cstd(i),g(i)
+        write(*,'(3E13.5,f13.5)'),cmean(i),cstd(i),g(i),cmean(i)/cstd(i)
+        DAT(1020+i)=(cmean(i)/cstd(i))
      end do
      print*,''
   end if
@@ -919,16 +922,17 @@ subroutine ITER_CB(ALG_MODE, ITER_COUNT,OBJVAL, INF_PR, INF_DU,MU, DNORM, REGU_S
   !
   !     You can put some output here
   !
-
   if (id_proc.eq.0) then
 
      if (ITER_COUNT .eq.0) then
         write(*,*) 
         write(*,*) 'iter    objective      ||grad||        inf_pr          inf_du         lg(mu)'
+        write(86,*) 'iter    objective    betag1    betag2    betag3   betag4    betag5    betag6     betag7    betag8'
      end if
 
      write(*,'(i5,5e15.7)') ITER_COUNT,OBJVAL,DNORM,INF_PR,INF_DU,MU
      write(76,'(i5,5e15.7)') ITER_COUNT,OBJVAL,DNORM,INF_PR,INF_DU,MU
+     write(86,'(i5,9e15.7)') ITER_COUNT,OBJVAL,DAT(1020+1),DAT(1020+2),DAT(1020+3),DAT(1020+4),DAT(1020+5),DAT(1020+6),DAT(1020+7),DAT(1020+8)
 
   end if
 
@@ -957,8 +961,8 @@ subroutine epigrads(fct,fctindx,dim,ndimt,xtmp,xstdt,ftmp,dftmp)
 
   gtol=1e-6
 
-  low(1:ndimt-DIM)= xtmp(1:ndimt-DIM)  + xstdt(1:ndimt-DIM)
-  up(1:ndimt-DIM) = xtmp(1:ndimt-DIM)  + xstdt(1:ndimt-DIM)
+  low(1:ndimt-DIM)= xtmp(1:ndimt-DIM)  !+ xstdt(1:ndimt-DIM)
+  up(1:ndimt-DIM) = xtmp(1:ndimt-DIM)  !+ xstdt(1:ndimt-DIM)
 
   call optimize(ndimt-DIM,xtmp,ndimt,ftmp,dftmp,low,up,gtol,.true.,.false.,fctindx)
 
