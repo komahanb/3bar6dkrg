@@ -5,5 +5,5 @@
 20000		    ! # of MonteCarlo Simulation
 30                  ! # of Decomposition, Bounds for Histogram
 0		    !read MC Samples
-1		    !Evaluate exact function during MC or not (0 or 1)
-0		    ! Expensive to calculate exact stats using monte carlo
+0		    !Evaluate exact function during MC or not (0 or 1)
+1		    ! Expensive to calculate exact stats using monte carlo
