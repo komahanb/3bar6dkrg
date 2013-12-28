@@ -1,2 +1,5 @@
 make
-mpiexec -np 1 ./MixedOUU  |tee screen
+mpiexec -np 4 ./MixedOUU  |tee screen
+./save.sh
+
+
