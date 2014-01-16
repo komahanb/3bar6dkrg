@@ -107,7 +107,7 @@ program problemKriging
   !===================================================================
 
   probtype(:)=1
-  kprob=2
+  kprob=4
 
   IDAT(1)=kprob
   IDAT(2)=0
