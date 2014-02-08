@@ -34,8 +34,8 @@ subroutine optimize(ndvar,D,ndvart,fobj,dfdD,low,up,gtol,maximize,outputscreen,f
   !     We suppress both code-supplied stopping tests because the
   !        user is providing his own stopping criteria.
 
-  factr=1.d+7
-  pgtol=1.d+7
+  factr=0.0d0
+  pgtol=0.0d0
 
   !     We specify the number m of limited memory corrections stored.  
 

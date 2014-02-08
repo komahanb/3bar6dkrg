@@ -14,7 +14,7 @@ EXE = MixedOUU
 
 # CHANGEME: Here is the name of all object files corresponding to the source
 #           code that you wrote in order to define the problem statement
-OBJS =  problemKriging.o threebarcost.o BFGSroutines.o optimize.o CalcstuffBFGS.o
+OBJS =  problemKriging.o BFGSroutines.o optimize.o CalcstuffBFGS.o
 
 # CHANGEME: Additional libraries
 ADDLIBS =
@@ -32,7 +32,7 @@ F77 = mpif77
 F90 = mpif90
 
 # Fotran Compiler options
-FFLAGS = -O3 -r8 -openmp
+FFLAGS = -O4 -r8 -openmp
 
 # additional Fortran Compiler options for linking
 F77LINKFLAGS =  -Wl,--rpath -Wl,/home/komahan/Dropbox/Thesis/Program/Markus/Ipopt-3.10.0/lib
