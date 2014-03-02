@@ -1,0 +1,8 @@
+rm -rf kprob*
+mkdir kprob0
+mkdir kprob1
+mkdir kprob2
+mkdir kprob3
+mkdir kprob4
+mkdir kprobdet1
+mkdir kprobdet2

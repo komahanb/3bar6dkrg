@@ -1,0 +1,5 @@
+rm *.o *~ *.his *.OUT \#* HIST* fort.* tecp*
+rm samp/*
+rm output/*
+rm stats/*
+rm norm/*

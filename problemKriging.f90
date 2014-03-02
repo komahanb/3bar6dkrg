@@ -107,7 +107,7 @@ program problemKriging
   !===================================================================
 
   probtype(:)=1
-  kprob=4
+  kprob=0
 
   IDAT(1)=kprob
   IDAT(2)=0
@@ -148,7 +148,7 @@ program problemKriging
 
   !Problem data and other constants
   dat(1000+1)=10.0 !height ref
-  dat(1000+2)=1.0e7 !E
+  dat(1000+2)=1.0e8 !E
   dat(1000+3)=0.1 !gamma
   dat(1000+4)=50.0*pi/180.0
   dat(1000+5)=30000.0
@@ -166,7 +166,7 @@ program problemKriging
   !Displacement
   dat(1000+12)=0.005    ! in  max_u_disp=dat(12)
   dat(1000+13)=0.005    ! in  max_v_disp=dat(12)
-  dat(1000+14)=1.0      ! Factor of safety
+  dat(1000+14)=1.00      ! Factor of safety
   dat(1000+20)=77       ! filenum for PC
 
 
