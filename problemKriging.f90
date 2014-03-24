@@ -148,7 +148,7 @@ program problemKriging
 
   !Problem data and other constants
   dat(1000+1)=10.0 !height ref
-  dat(1000+2)=1.0e8 !E
+  dat(1000+2)=1.0e7 !E
   dat(1000+3)=0.1 !gamma
   dat(1000+4)=50.0*pi/180.0
   dat(1000+5)=30000.0

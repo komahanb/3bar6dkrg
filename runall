@@ -1,33 +1,33 @@
-make
-mpiexec -np 4 ./MixedOUU  |tee screen
-./save.sh
-echo "kprob0 success!"
+#make
+#mpiexec -np 6 ./MixedOUU  |tee screen
+#./save.sh
+#echo "kprob0 success!"
 
-sed -i 's/kprob=0/kprob=1/' problemKriging.f90
-sed -i 's/kprob0/kprob1/' save.sh
-make
-mpiexec -np 4 ./MixedOUU  |tee screen
-./save.sh
-echo"kprob1 success!"
+#sed -i 's/kprob=0/kprob=1/' problemKriging.f90
+#sed -i 's/kprob0/kprob1/' save.sh
+#make
+#mpiexec -np 6 ./MixedOUU  |tee screen
+#./save.sh
+#echo"kprob1 success!"
 
-sed -i 's/kprob=1/kprob=2/' problemKriging.f90
-sed -i 's/kprob1/kprob2/' save.sh
+#sed -i 's/kprob=1/kprob=2/' problemKriging.f90
+#sed -i 's/kprob1/kprob2/' save.sh
 make
-mpiexec -np 4 ./MixedOUU  |tee screen
+mpiexec -np 6 ./MixedOUU  |tee screen
 ./save.sh
 echo "kprob2 success!"
 
 sed -i 's/kprob=2/kprob=3/' problemKriging.f90
 sed -i 's/kprob2/kprob3/' save.sh
 make
-mpiexec -np 4 ./MixedOUU  |tee screen
+mpiexec -np 6 ./MixedOUU  |tee screen
 ./save.sh
 echo "kprob3 success!"
 
 sed -i 's/kprob=3/kprob=4/' problemKriging.f90
 sed -i 's/kprob3/kprob4/' save.sh
 make
-mpiexec -np 4 ./MixedOUU  |tee screen
+mpiexec -np 6 ./MixedOUU  |tee screen
 ./save.sh
 echo "kprob4 success!"
 
@@ -36,14 +36,14 @@ sed -i 's/IDAT(2)=0/IDAT(2)=1/' problemKriging.f90
 sed -i 's/kprob4/kprobdet1/' save.sh
 #sed -i 's/dat(1000+3)=1.00/dat(1000+3)=1.25/' problemKriging.f90
 make
-mpiexec -np 4 ./MixedOUU  |tee screen
+mpiexec -np 6 ./MixedOUU  |tee screen
 ./save.sh
 echo "kprobdet1 success!"
 
 sed -i 's/dat(1000+3)=1.00/dat(1000+3)=1.50/' problemKriging.f90
 sed -i 's/kprobdet1/kprobdet2/' save.sh
 make
-mpiexec -np 4 ./MixedOUU  |tee screen
+mpiexec -np 6 ./MixedOUU  |tee screen
 ./save.sh
 echo "kprobdet2 success!"
 
